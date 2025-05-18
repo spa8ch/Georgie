@@ -1,0 +1,160 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    background-color: #ffffff;
+    color: #333;
+  }
+
+
+  header {
+    background-color: #ffffff
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+  }
+
+  header .logo {
+    width: 100px;
+    margin-bottom: 20px;
+  }
+
+
+
+  /* Navigation Bar */
+nav {
+    background-color:#004d40;
+    color: white; /* Or any color you prefer */
+    display: flex;
+    grid-template-columns: auto; /* Let the content determine the width */
+    justify-content: center; /* Center the content */
+    padding: 10px 0;
+}
+
+.navbar-greeting {
+    color: white; /* Or any color you prefer */
+    text-decoration: none;
+    padding: 10px 15px;
+    display: inline-block;
+}
+
+
+.top-right-greeting {
+    position: absolute;
+    top: 10px; /* Adjust vertical position as needed */
+    right: 20px; /* Adjust horizontal position as needed */
+    /* Add any other styling for the greeting */
+    z-index: 10; /* Ensure it's above other elements if needed */
+    text-align: right; /* Align the text within the greeting to the right (optional) */
+}
+
+
+.navbar-greeting a:last-child {
+    margin-right: 0; /* Remove right margin from the last link */
+}
+
+nav a {
+    margin: 0 15px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+}
+
+nav a:hover {
+    background-color: #00796b;
+  }
+
+nav .active { /* You'll need to add a class "active" to the current page's link */
+    background-color: #555;
+    font-weight: bold;
+}
+
+
+
+
+
+
+
+  .container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px 20px;
+    background-color: white;
+  }
+
+  #login-section h1 {
+    text-align: center;
+  }
+
+  .logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .centered-paragraph {
+    text-align: center;
+  }
+  
+  .intro {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .gallery {
+    text-align: center;
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .gallery img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  form {
+    max-width: 600px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  input, textarea, button {
+    padding: 10px;
+    font-size: 1rem;
+  }
+
+  button {
+    background-color: #004d40;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  button:hover {
+    background-color: #00695c;
+  }
+
+  footer {
+    background-color: #004d40;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+  }
