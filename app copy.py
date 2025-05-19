@@ -19,82 +19,15 @@ logging.basicConfig(level=logging.INFO) # Show errors in the console
 
 # Function to return the database connection object 
 def get_db_connection():
-    conn = sqlite3.connect('database.db')  #Name of the database
+    print("Attempting to connect to the database...")  # Add this line
+    conn = sqlite3.connect('database.db', check_same_thread=False)
     conn.row_factory = sqlite3.Row # This allows us to access columns by name
-    return conn #   Return the connection object
+    return conn
 
 # Function to return true if file extention is in the list - only allows image files
 def allowed_file(filename): # Check if the file is allowed
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'} # Set of allowed file extensions
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS # Check if the file extension is in the allowed list
-
-
-#Index Route
-#@app.route('/')  # Home Page
-
-# Register Route
-@app.route('/sign_up', methods=['GET', 'POST']) #  Register Page
-def register():
-    if request.method == 'POST':
-        first_name = request.form['first_name']
-        surname = request.form['surname']
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        
-        if not username or not email or not password:
-            #flash("All fields are required.", "danger")
-            return render_template('sign_up.html')
-
-        hashed_password = generate_password_hash(password)
-
-        conn = get_db_connection()
-        try:
-            conn.execute(
-                'INSERT INTO Users (first_name, surname, email, username, password) VALUES (?, ?, ?, ?,?)',
-                (first_name, surname, email, username, hashed_password)
-            )
-            conn.commit()
-        except sqlite3.IntegrityError:
-            #flash("Username or email already exists.", "danger")
-            return render_template('sign_up.html')
-        finally:
-            conn.close()
-
-        #flash("Registration successful. Please log in.", "success")
-        return redirect(url_for('login'))
-
-    return render_template('sign_up.html')
-
-'''
-# Login Route
-@app.route('/login', methods=['GET', 'POST']) # Login Page
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-
-        conn = get_db_connection() # Connect to the database
-        query = "SELECT * FROM Users WHERE username = ?" # SQL query to find the user
-        user = conn.execute(query, (username,)).fetchone()# Fetch the user from the database
-        conn.close()# Close the database connection
-
-
-        if user and check_password_hash(user['password'], password):# Check if the user exists and the password is correct
-            session['user_id'] = user['user_id'] # Store the user ID in the session
-            session['username'] = user['username'] # Store the username in the session
-        
-            flash('Login successful!', 'success') # Show success message
-            return redirect(url_for('index'))  # Redirect to the home page
-        else:
-            flash('Invalid username or password.', 'danger') # Show error message
-            return render_template('login.html') # Render the login page with error message
-
-    return render_template('login.html') # Render the login page
-
-
-'''
-
 
 
 
@@ -106,8 +39,7 @@ def init_db():
         DROP TABLE IF EXISTS Comments;
         DROP TABLE IF EXISTS Artworks;
         DROP TABLE IF EXISTS Users;
-        DROP TABLE IF EXISTS Artists;
-
+        DROP TABLE IF EXISTS Likes;
 
         CREATE TABLE Users (
             user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -115,7 +47,7 @@ def init_db():
             email TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
             first_name TEXT NOT NULL,
-            surname TEXT NOT NULL,                                  
+            surname TEXT NOT NULL                                  
         );
 
         CREATE TABLE Artworks (
@@ -126,7 +58,7 @@ def init_db():
             submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             image_path TEXT,
             pending INTEGER DEFAULT 1,
-            FOREIGN KEY (user_id) REFERENCES Users(users_id)
+            FOREIGN KEY (user_id) REFERENCES Users(user_id)
         );
 
         CREATE TABLE Comments (
@@ -154,6 +86,96 @@ def init_db():
     conn.close()
     print("Database initialized.")
 
+# Root
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    return render_template('index.html')
+
+
+# Register Route
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        first_name = request.form['first_name']
+        surname = request.form['surname']
+        password = request.form['password']
+
+        if not username or not email or not password or not first_name or not surname:
+            flash("All fields are required.", "danger")
+            return render_template('sign_up.html')
+
+        hashed_password = generate_password_hash(password)
+
+        conn = get_db_connection()
+        try:
+            conn.execute(
+                'INSERT INTO Users (username, email, password, first_name, surname) VALUES (?, ?, ?, ?, ?)',
+                (username, email, hashed_password, first_name, surname)
+            )
+            conn.commit()
+            flash("Registration successful. Please log in.", "success")
+            return redirect(url_for('login'))
+        except sqlite3.IntegrityError as e:
+            logging.error(f"Database error: {e}")
+            flash("Username or email already exists.", "danger")
+            return render_template('sign_up.html')
+        finally:
+            conn.close()
+
+    return render_template('sign_up.html')
+
+
+
+
+# Login Route
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        conn = get_db_connection()
+        user = conn.execute('SELECT * FROM Users WHERE username = ?', (username,)).fetchone()
+        conn.close()
+
+        if user and check_password_hash(user['password'], password):
+            session['user_id'] = user['user_id']  # Store user_id in session
+            session['username'] = user['username']  # Store user_id in session
+            flash('Login successful!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid username or password', 'danger')
+            return render_template('login.html')
+    return render_template('login.html')
+
+
+# Gallery
+@app.route('/gallery', methods=['GET', 'POST'])
+def gallery():
+    return render_template('gallery.html')
+
+
+# Upload Route
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    print ("hello")
+    return render_template('submit.html')
+
+
+# Logout
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)  # Remove user_id from session
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('index'))
+
+
+
+
+
+
 
 
 
@@ -165,6 +187,6 @@ if __name__ == '__main__':
     except OSError as e:
         logging.error(f"Could not create upload folder: {e}")
 
-    app.run(host='0.0.0.0')
     init_db()  # Uncomment to reset DB
+    #app.run(host='0.0.0.0')
     app.run(debug=True)
