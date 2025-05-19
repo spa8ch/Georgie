@@ -1,200 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Moreton Bay Art</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      line-height: 1.6;
-      background-color: #f0f0f0;
-      color: #333;
-    }
+  <head>
+    <meta charset="UTF-8">
+    <title>Moreton Bay Art | Register</title>
+    <link rel="stylesheet" href="../static/style.css">
+  </head>
 
 
+<body>
 
-    header {
-      background-color: #add8e6
-      color: white;
-      padding: 60px 20px;
-      text-align: center;
-    }
-
-    header .logo {
-      width: 100px;
-      margin-bottom: 20px;
-    }
-
-    nav {
-      background-color: #004d40;
-      display: flex;
-      justify-content: center;
-      padding: 10px 0;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      padding: 14px 20px;
-      margin: 0 10px;
-      font-weight: bold;
-      transition: background-color 0.3s;
-    }
-
-    nav a:hover {
-      background-color: #00796b;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 40px 20px;
-      background-color: white;
-    }
-
-	.logo {
-	  position: absolute;
-	  top: 20px;
-	  left: 20px;
-	  width: 80px;
-	  height: 80px;
-	  border-radius: 50%;
-	  object-fit: cover;
-	}
-
-	.centered-paragraph {
-	  text-align: center;
-	}
-	
-    .intro {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-	body {
-	  margin: 0; /* Removes default margin */
-	  padding: 20px; /* Adds space around the content */
-	  background-color: #f4f4f4; /* Light background color */
-	}
-
-	form {
-	  max-width: 600px;
-	  margin: 0 auto; /* Centers the form horizontally */
-	  padding: 20px; /* Adds space inside the form */
-	  display: flex;
-	  flex-direction: column;
-	  gap: 15px;
-	  border: 2px solid #ccc; /* Border around the form */
-	  border-radius: 10px; /* Rounded corners */
-	  background-color: #fff; /* White background for the form */
-	}
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
-
-    .gallery img {
-      width: 100%;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-
-	form {
-	  max-width: 600px;
-	  margin-left: 0; /* Align form to the left */
-	  padding: 20px; /* Adds space inside the form */
-	  display: flex;
-	  flex-direction: column;
-	  gap: 15px;
-	  border: 15px solid #ccc; /* Optional: adds a border around the form */
-	  border-radius: 10px; /* Optional: adds rounded corners */
-	}
-
-    input, textarea, button {
-      padding: 10px;
-      font-size: 1rem;
-    }
-
-    button {
-      background-color: #004d40;
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #00695c;
-    }
-
-    footer {
-      background-color: #004d40;
-      color: white;
-      text-align: center;
-      padding: 20px 0;
-      margin-top: 40px;
-    }
-  </style>
-</head>
-
-  <header>
-	<img src="https://tse4.mm.bing.net/th/id/OIP.6hTK9dDzxj3g8kzvTXh1ngHaHa?rs=1&pid=ImgDetMain" alt="Moreton Bay Art Competition Logo" class="logo">
-	
-    <h1>Upload Your Artwork!</h1>
-	<h3>Share your art pieces here!</h3>
-    
-	
+  <header class="header">
+	  <img src="../static/images/logo.jpg" alt="Moreton Bay Art Competition Logo" class="logo">
+	  <h1>Moreton Bay Art</h1>
+    <h3>Celebrating creativity across our community</h3>
   </header>
-  <nav>
-    <a href="#">Home</a>
-    <a href="#gallery">Gallery</a>
-    <a href="#upload">Upload</a>
-    <a href="#contact">Contact</a>
-  </nav>
 
+<nav>
+    <a href="{{ url_for('index') }}">Home</a> |
+    <a href="{{ url_for('gallery') }}">Gallery</a> |
+    {% if session['user_id'] %}
+        <a href="{{ url_for('upload') }}">Upload</a> |
+        <a href="{{ url_for('logout') }}">Log Out</a>  {% else %}
+        <a href="{{ url_for('login') }}">Sign In</a> |
+        <a href="{{ url_for('register') }}">Register</a>
+    {% endif %}
+</nav>
 
-<section>
-    <section id="upload" style="margin-top: 60px;">
-      <h2>Submit Your Artwork</h2>
-	  
-	  <p>All uploaded artwork must be approved before appearing on the site. You can choose to submit your piece to the public gallery or enter it into the competition.  
-  By clicking "Submit", you agree to have your artwork published publicly on this website if approved.</p>
-      <form>
-        <input type="text" placeholder="Your Name" required>
-        <input type="text" placeholder="Title of Artwork" required>
-        <input type="file" accept="image/*" required>
-        <textarea rows="4" placeholder="Short Description (optional)"></textarea>
-		<label for="submission-type">Submission Type:</label>
-<select id="submission-type" name="submission-type">
-  <option value="gallery">Artist</option>
-  <option value="competition">Enthusiast</option>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+  <section class="container">
+    <h2>Submit Your Artwork</h2>	  
+	  <form>
+      <input type="text" placeholder="Your Name" required>
+      <input type="text" placeholder="Title of Artwork" required>
+      <input type="file" accept="image/*" required>
+      <textarea rows="4" placeholder="Short Description (optional)"></textarea>
+      <label for="submission-type">Submission Type:</label>
+      <button type="submit">Upload</button>
+    </form>
+  </section>
   
-</select>
-        <button type="submit">Upload</button>
-      </form>
-    </section>
-	
-
-
-
-
-    <section id="contact" style="margin-top: 60px;">
-      <h2>Contact Us</h2>
-      <p>Have questions or need help? Email us at <a href="mailto:info@moretonbayart.com">info@moretonbayart.com</a></p>
-    </section>
-  </div>
 
   <footer>
     <p>&copy; 2025 Moreton Bay Art Competition. All rights reserved.</p>
-	
-  </footer>
+	</footer>
+
 </body>
 </html>

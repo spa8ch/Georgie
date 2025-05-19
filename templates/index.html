@@ -2,35 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Moreton Bay Art</title>
+  <title>Moreton Bay Art | Home</title>
   <link rel="stylesheet" href="../static/style.css">
 </head>
 
 
 
 <body>
-  <header>
-	  <img src="../static/logo.jpg" alt="Moreton Bay Art Competition Logo" class="logo">
-	
-      <h1>Moreton Bay Art</h1>
-      <h3>Celebrating creativity across our community</h3>
+
+
+
+
+  <header class="header">
+	  <img src="../static/images/logo.jpg" alt="Moreton Bay Art Competition Logo" class="logo">
+	  
+    <div class="top-right-greeting">
+      {% if 'user_id' in session %}
+        Hello, {{ session['username'] }}
+      {% endif %}
+    </div>
+    
+    <h1>Moreton Bay Art</h1>
+    <h3>Celebrating creativity across our community</h3>
   </header>
   
   <nav>
-    <a href="#">Home</a> |
-    <a href="gallery.html">Gallery</a>  |
-    <a href="login.html">Login</a>  |
-    <a href="sign_up.html">Register</a>
+      <a href="{{ url_for('index') }}">Home</a> |
+      <a href="{{ url_for('gallery') }}">Gallery</a> |
+      {% if session['user_id'] %}
+          <a href="{{ url_for('upload') }}">Upload</a> |
+          <a href="{{ url_for('logout') }}">Log Out</a>  {% else %}
+          <a href="{{ url_for('login') }}">Sign In</a> |
+          <a href="{{ url_for('register') }}">Register</a>
+      {% endif %}
   </nav>
 
-  <div class="container">
-    <section class="intro">
-      <h2>Welcome to the 2025 Moreton Bay Art Page</h2>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+
+    <section class="common">
+      <h1>Welcome to the 2025 Moreton Bay Art Page</h1>
       <p>Whether you're a student, professional, or hobbyist, we invite you to showcase your creative talent. Enjoy the gallery or upload your work to participate.</p>
-    </section>
+    
+      <hr>
 	
-	  <section class="about">
-      <h2 style="text-align: center;">About the Moreton Bay Art Competition</h2>
+	    <h1>About the Moreton Bay Art Competition</h1>
       <p>
         The Moreton Bay Art Competition is a local annual event that celebrates the creative talents of artists from across the Moreton Bay Region. Open to all ages and experience levels, this exciting competition invites painters, photographers, digital artists, and more to share their work with the wider community.
       </p>
@@ -43,32 +68,38 @@
       <p>
         Whether you're an emerging talent or an established artist, the Moreton Bay Art Competition is a great opportunity to gain exposure, connect with other creatives, and be part of a vibrant local art scene.
       </p>
+     <hr>
+ </section>
+   
+    <section class="common">
+      <h1>Past Art Winners</h1>
+    
+      <section class="gallery">
+
+        <div class="gallery-item">
+          <img src="../static/images/win_24.jpg" alt="Art 4" alt="Winner 2024">
+          <h3 class="art-title">2024 Winners</h3>
+          <p class="caption">AThe image features a dynamic, swirling pattern that blends vibrant shades of purple, pink, and blue. The smooth curves and color transitions create a sense of motion, energy, and creativity. This kind of abstract design often symbolizes imagination, artistic expression, and modernity, making it suitable for an art-related theme..</p>
+        </div>
+      
+        <div class="gallery-item">
+          <img src="../static/images/win_23.jpg" alt="Winner 2023">
+          <h3 class="art-title">2023 Winners</h3>
+          <p class="caption">The image is a vibrant and creative tree design. The trunk and branches are simple and dark, while the leaves are made up of multicolored paint splashes or handprint shapes in shades of red, blue, green, yellow, orange, and purple. This symbolizes creativity, diversity, and community — commonly used in art competitions, children's programs, or inclusive art initiatives.</p>
+        </div>
+      
+        <div class="gallery-item">
+          <img src="../static/images/win_22.jpg" alt="Winner 2022">
+          <h3 class="art-title">2022 Winners</h3>
+          <p class="caption">The image features a classic wooden artist’s palette with circular blobs of various paint colors — typically red, yellow, blue, and green — arranged on the surface. A paintbrush lies diagonally across the palette, bristles down, suggesting active creativity. The image is set on a white background, and its simple, clean design makes it ideal for representing art programs, galleries, or competitions.</p>
+        </div>
       </section>
+    </section>
+    
 
-    <section id="gallery">
-      <h2>Past Art Winners</h2>
-      <div class="gallery">
-    
-    <div class="gallery-item">
-      <img src="https://thaka.bing.com/th/id/OIP.GfOgvmxHOVQIbDem0BKPEQHaHa?w=204&h=203&c=7&pcl=292827&r=0&o=5&dpr=1.5&pid=1.7" alt="Art 4" alt="Art 1">
-      <h3 class="art-title">2024 Winners</h3>
-      <p class="caption">AThe image features a dynamic, swirling pattern that blends vibrant shades of purple, pink, and blue. The smooth curves and color transitions create a sense of motion, energy, and creativity. This kind of abstract design often symbolizes imagination, artistic expression, and modernity, making it suitable for an art-related theme..</p>
-    </div>
-    
-    <div class="gallery-item">
-      <img src="https://tse2.mm.bing.net/th/id/OIP.XoVIGhEWeIoVfI2rc6-qZQHaHa?rs=1&pid=ImgDetMain" alt="Art 2">
-      <h3 class="art-title">2023 Winners</h3>
-      <p class="caption">The image is a vibrant and creative tree design. The trunk and branches are simple and dark, while the leaves are made up of multicolored paint splashes or handprint shapes in shades of red, blue, green, yellow, orange, and purple. This symbolizes creativity, diversity, and community — commonly used in art competitions, children's programs, or inclusive art initiatives.</p>
-    </div>
-    
-    <div class="gallery-item">
-      <img src="https://tse4.mm.bing.net/th/id/OIP.GMOiLWTr5K8vzecCbziBswHaHa?rs=1&pid=ImgDetMain" alt="Art 3">
-      <h3 class="art-title">2022 Winners</h3>
-      <p class="caption">The image features a classic wooden artist’s palette with circular blobs of various paint colors — typically red, yellow, blue, and green — arranged on the surface. A paintbrush lies diagonally across the palette, bristles down, suggesting active creativity. The image is set on a white background, and its simple, clean design makes it ideal for representing art programs, galleries, or competitions.</p>
-    </div>
-
-  </div>
-</section>
+  <footer>
+    <p>&copy; 2025 Moreton Bay Art Competition. All rights reserved.</p>
+	</footer>
 
 
 </body>

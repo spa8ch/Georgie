@@ -1,35 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
-    <title>Moreton Bay Art</title>
+    <title>Moreton Bay Art | Register</title>
     <link rel="stylesheet" href="../static/style.css">
-  </head>
+</head>
 
 
 <body>
-  <header>
-    <img src="../static/logo.jpg" alt="Moreton Bay Art Competition Logo" class="logo">
-    
+
+
+
+
+
+  <header class="header">
+    <img src="../static/images/logo.jpg" alt="Moreton Bay Art Competition Logo" class="logo">
     <h1>Moreton Bay Art</h1>
-      <h3>Celebrating creativity across our community</h3>
+    <h3>Celebrating creativity across our community</h3>
   </header>
 
-  <nav>
-    <a href="index.html">Home</a> |
-    <a href="gallery.html">Gallery</a> |
-    <a href="login.html">Login</a> 
-  </nav>
-  
-  <div class="container" id="login-section">
-    <h1>Create an Account</h1>
-    <form>
-      <input type="text" placeholder="Full Name" required />
-      <input type="email" placeholder="Email Address" required />
-      <input type="text" placeholder="Username" required />
-      <input type="password" placeholder="Password" required />
+<nav>
+    <a href="{{ url_for('index') }}">Home</a> |
+    <a href="{{ url_for('gallery') }}">Gallery</a> |
+    {% if session['user_id'] %}
+        <a href="{{ url_for('upload') }}">Upload</a> |
+        <a href="{{ url_for('logout') }}">Log Out</a>  {% else %}
+        <a href="{{ url_for('login') }}">Sign In</a> |
+        <a href="{{ url_for('register') }}">Register</a>
+    {% endif %}
+</nav>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+
+  <div class="container">
+    <h2>Create an Account</h2>
+    <form method="POST" action="{{ url_for('register') }}">  <input type="text" name="first_name" placeholder="First Name" required />
+      <input type="text" name="surname" placeholder="Surname" required />
+      <input type="email" name="email" placeholder="Email Address" required />
+      <input type="text" name="username" placeholder="Username" required />
+      <input type="password" name="password" placeholder="Password" required />
       <button type="submit">Register</button>
-	  </form>
+    </form>
   </div>
+
+  <footer>
+    <p>&copy; 2025 Moreton Bay Art Competition. All rights reserved.</p>
+  </footer>
 </body>
 </html>

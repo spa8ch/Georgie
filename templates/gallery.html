@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Moreton Bay Art</title>
+  <link rel="stylesheet" href="../static/style.css">
+</head>
+
+<body>
+
+  <header class="header">
+	  <img src="../static/images/logo.jpg" alt="Moreton Bay Art Competition Logo" class="logo">
+	  <h1>Moreton Bay Art</h1>
+    <h3>Celebrating creativity across our community</h3>
+  </header>
+  
+  <nav>
+      <a href="{{ url_for('index') }}">Home</a> |
+      <a href="{{ url_for('gallery') }}">Gallery</a> |
+      {% if session['user_id'] %}
+      <a href="{{ url_for('upload') }}">Upload</a> |
+      {% endif %}
+      {% if not session['user_id'] %}
+      <a href="{{ url_for('login') }}">Sign In</a> |
+      <a href="{{ url_for('register') }}">Register</a>
+      {% endif %}
+  </nav>
+
+
+
+    <footer>
+    <p>&copy; 2025 Moreton Bay Art Competition. All rights reserved.</p>
+	</footer>
+
+</body>
