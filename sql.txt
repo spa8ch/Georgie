@@ -1,0 +1,27 @@
+# Insert New User
+INSERT INTO Users (username, email, password, first_name, surname) 
+VALUES ('JohnDoe', 'johndoe@example.com', 'hashed_password', 'John', 'Doe');
+
+# Retrieve a user by username
+SELECT * FROM Users WHERE username = 'JohnDoe';
+
+# Insert a new artwork
+INSERT INTO Artworks (user_id, title, description, image_path) 
+VALUES (1, 'Sunset Painting', 'A beautiful sunset view', 'uploads/sunset.jpg');
+
+# Get all artworks by a specific user
+SELECT * FROM Artworks WHERE user_id = 1;
+
+# Insert a new comment
+INSERT INTO Comments (artwork_id, user_id, comment) 
+VALUES (1, 2, 'This artwork is amazing!');
+
+# Retrieve comments for a specific artwork
+SELECT * FROM Comments WHERE artwork_id = 1 ORDER BY timestamp DESC;
+
+# Like artwork
+INSERT INTO Likes (user_id, artwork_id) 
+VALUES (3, 1);
+
+# Retrieve all likes for a specific artwork
+SELECT COUNT(*) AS like_count FROM Likes WHERE artwork_id = 1;
