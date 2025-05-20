@@ -49,6 +49,33 @@ def index():
 # Register Route
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    # Read form data
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        first_name = request.form['first_name']
+        surname = request.form['surname']
+        password = request.form['password']
+
+        if not username or not email or not password or not first_name or not surname:
+            flash("All fields are required.", "danger")
+            return render_template('sign_up.html')
+
+        conn = get_db_connection()
+        try:
+            conn.execute(
+                'INSERT INTO Users (username, email, password, first_name, surname) VALUES (?, ?, ?, ?, ?)',
+                (username, email, password, first_name, surname)
+            )
+            conn.commit()
+            flash("Registration successful. Please log in.", "success")
+            return redirect(url_for('login'))
+        except:
+            flash("Username or email already exists.", "danger")
+            return render_template('sign_up.html')
+        finally:
+            conn.close()
+
     return render_template('sign_up.html')
 
 
@@ -106,6 +133,5 @@ if __name__ == '__main__':
     except OSError as e:
         logging.error(f"Could not create upload folder: {e}")
 
-    init_db()  # Uncomment to reset DB
-    #app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0')
     app.run(debug=True)
